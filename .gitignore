@@ -1,9 +1,42 @@
-# Virtual environment
-.venv/
-
-# IDE files
-.idea/
-
-# Python cache
+# =========================
+# Python
+# =========================
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.pyc.*
+*.py,cover
+
+# Virtual Environment
+.venv/
+env/
+venv/
+
+# =========================
+# IntelliJ / IDE
+# =========================
+.idea/
+*.iml
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs / temp
+# =========================
+*.log
+*.tmp
+
+# =========================
+# Jupyter (just in case)
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Environment variables
+# =========================
+.env
