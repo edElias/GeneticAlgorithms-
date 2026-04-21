@@ -6,6 +6,8 @@ FIELD_MUTATORS = {
     "facilitator": lambda rooms, times, facilitators: random.choice(facilitators),
 }
 
+FIELD_NAMES = list(FIELD_MUTATORS.keys())
+
 
 def mutate(schedule, rooms, times, facilitators, mutation_rate=0.1):
     """
@@ -19,7 +21,7 @@ def mutate(schedule, rooms, times, facilitators, mutation_rate=0.1):
 
     for assignment in schedule.assignments.values():
         if random.random() < mutation_rate:
-            field = random.choice(list(FIELD_MUTATORS.keys()))
+            field = random.choice(FIELD_NAMES)
             assignment[field] = FIELD_MUTATORS[field](rooms, times, facilitators)
             mutated = True
 

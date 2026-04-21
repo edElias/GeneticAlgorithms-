@@ -1,12 +1,3 @@
-"""
-Should ONLY:
-
-define activities
-define rooms
-define facilitators
-define times
-
-"""
 from model.activity import Activity
 from model.room import Room
 
@@ -21,13 +12,13 @@ ACTIVITIES = [
     Activity("SLA101B", 35, ["Glen", "Lock", "Banks"], ["Numen", "Richards", "Shaw", "Singer"]),
     Activity("SLA191A", 45, ["Glen", "Lock", "Banks"], ["Numen", "Richards", "Shaw", "Singer"]),
     Activity("SLA191B", 40, ["Glen", "Lock", "Banks"], ["Numen", "Richards", "Shaw", "Singer"]),
-    Activity("SLA201", 60, ["Glen", "Banks", "Zeldin", "Lock", "Singer"], ["Richards", "Uther", "Shaw"]),
-    Activity("SLA291", 50, ["Glen", "Banks", "Zeldin", "Lock", "Singer"], ["Richards", "Uther", "Shaw"]),
-    Activity("SLA303", 25, ["Glen", "Zeldin"], ["Banks"]),
-    Activity("SLA304", 20, ["Singer", "Uther"], ["Richards"]),
-    Activity("SLA394", 15, ["Tyler", "Singer"], ["Richards", "Zeldin"]),
-    Activity("SLA449", 30, ["Tyler", "Zeldin", "Uther"], ["Zeldin", "Shaw"]),
-    Activity("SLA451", 90, ["Lock", "Banks", "Zeldin"], ["Tyler", "Singer", "Shaw", "Glen"]),
+    Activity("SLA201",  60, ["Glen", "Banks", "Zeldin", "Lock", "Singer"], ["Richards", "Uther", "Shaw"]),
+    Activity("SLA291",  50, ["Glen", "Banks", "Zeldin", "Lock", "Singer"], ["Richards", "Uther", "Shaw"]),
+    Activity("SLA303",  25, ["Glen", "Zeldin"], ["Banks"]),
+    Activity("SLA304",  20, ["Singer", "Uther"], ["Richards"]),
+    Activity("SLA394",  15, ["Tyler", "Singer"], ["Richards", "Zeldin"]),
+    Activity("SLA449",  30, ["Tyler", "Zeldin", "Uther"], ["Zeldin", "Shaw"]),
+    Activity("SLA451",  90, ["Lock", "Banks", "Zeldin"], ["Tyler", "Singer", "Shaw", "Glen"]),
 ]
 
 ROOMS = [
@@ -54,7 +45,7 @@ FACILITATORS = [
 # =============================================================================
 
 def get_activities():
-    return list(ACTIVITIES)
+    return ACTIVITIES
 
 def get_rooms():
     return ROOMS

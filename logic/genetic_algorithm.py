@@ -47,31 +47,62 @@ def run_genetic_algorithm(
         times,
         facilitators,
         population_size=250,
-        generations=100,
-        mutation_rate=0.1,
+        min_generations=100,
+        mutation_rate=0.01,
         elite_size=10,
+        verbose=True,
 ):
     """
     Runs the full Genetic Algorithm process:
       - Initializes a random population
-      - Evolves over a fixed number of generations using elitism,
-        selection, crossover, mutation, and fitness evaluation
-      - Prints best and average fitness each generation
+      - Evolves for at least min_generations
+      - After min_generations, stops when average fitness improvement < 1%
       - Returns the best Schedule found
+      - verbose=True prints per-generation stats; verbose=False suppresses them
     """
     elite_size = min(elite_size, population_size)
+    prev_avg   = None
+    generation = 0
 
     schedule_pool = initialize_schedule_pool(
         activities, rooms, times, facilitators, population_size
     )
 
-    for generation in range(1, generations + 1):
+    while True:
+        generation += 1
+
         # Sort descending by fitness
         schedule_pool.sort(key=lambda s: s.fitness, reverse=True)
 
-        best_fitness = schedule_pool[0].fitness
-        avg_fitness  = sum(s.fitness for s in schedule_pool) / len(schedule_pool)
-        print(f"Generation {generation:>3} | Best: {best_fitness:.4f} | Avg: {avg_fitness:.4f}")
+        best_fitness  = schedule_pool[0].fitness
+        worst_fitness = schedule_pool[-1].fitness
+        avg_fitness   = sum(s.fitness for s in schedule_pool) / len(schedule_pool)
+
+        # Compute percentage improvement vs previous generation
+        if prev_avg is None:
+            improvement     = None
+            improvement_str = "N/A"
+        elif abs(prev_avg) < 1e-10:
+            improvement     = None
+            improvement_str = "N/A (prev~0)"
+        else:
+            improvement     = (avg_fitness - prev_avg) / abs(prev_avg)
+            improvement_str = f"{improvement * 100:+.4f}%"
+
+        if verbose:
+            print(
+                f"Generation {generation:>3} | "
+                f"Best: {best_fitness:.4f} | "
+                f"Avg: {avg_fitness:.4f} | "
+                f"Worst: {worst_fitness:.4f} | "
+                f"Improvement: {improvement_str}"
+            )
+
+        # Stopping condition: at least min_generations AND improvement < 1%
+        if generation >= min_generations and improvement is not None and abs(improvement) < 0.01:
+            if verbose:
+                print(f"\nStopped at generation {generation}: improvement {improvement_str} < 1%")
+            break
 
         # Preserve elites unchanged
         elites   = schedule_pool[:elite_size]
@@ -87,7 +118,10 @@ def run_genetic_algorithm(
             new_pool.append(child)
 
         schedule_pool = new_pool
+        prev_avg = avg_fitness
 
-    # Return best schedule after all generations
+    # Return best schedule, stopping generation, and final average fitness
     schedule_pool.sort(key=lambda s: s.fitness, reverse=True)
-    return schedule_pool[0]
+    best      = schedule_pool[0]
+    final_avg = sum(s.fitness for s in schedule_pool) / len(schedule_pool)
+    return best, generation, final_avg

@@ -3,28 +3,25 @@ from logic.genetic_algorithm import run_genetic_algorithm
 
 
 def main():
-    # Load data
-    activities = get_activities()
-    rooms = get_rooms()
-    times = get_times()
+    activities   = get_activities()
+    rooms        = get_rooms()
+    times        = get_times()
     facilitators = get_facilitators()
 
-    # Run Genetic Algorithm
-    best_schedule = run_genetic_algorithm(
+    best, stop_gen, final_avg = run_genetic_algorithm(
         activities,
         rooms,
         times,
         facilitators,
         population_size=250,
-        generations=100,
-        mutation_rate=0.1,
+        min_generations=100,
+        mutation_rate=0.01,
         elite_size=10,
+        verbose=True,
     )
 
-    # Final result
-    print("\n=== FINAL BEST SCHEDULE ===")
-    print(best_schedule)
-    print(f"\nBest fitness: {best_schedule.fitness:.4f}")
+    print("\n=== Final Best Schedule ===")
+    print(best)
 
 
 if __name__ == "__main__":
