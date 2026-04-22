@@ -1,11 +1,6 @@
 from model.activity import Activity
 from model.room import Room
 
-# =============================================================================
-# Module-level constants — defined once, reused everywhere.
-# Activity objects are used as dictionary keys in Schedule.assignments,
-# so they must never be recreated after this point.
-# =============================================================================
 
 ACTIVITIES = [
     Activity("SLA101A", 40, ["Glen", "Lock", "Banks"], ["Numen", "Richards", "Shaw", "Singer"]),
@@ -40,9 +35,6 @@ FACILITATORS = [
     "Singer", "Uther", "Tyler", "Numen", "Zeldin"
 ]
 
-# =============================================================================
-# Getter functions — return constants directly, no logic or recreation.
-# =============================================================================
 
 def get_activities():
     return ACTIVITIES

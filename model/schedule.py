@@ -1,22 +1,10 @@
 class Schedule:
-    """
-    Represents a single complete candidate solution in the Genetic Algorithm.
-    Stores the assignment of every activity to a room, time, and facilitator.
-    Contains no generation, fitness, or GA logic — data container only.
-    """
 
     def __init__(self):
         self.assignments = {}
         self.fitness = None
 
     def copy(self):
-        """
-        Returns a shallow copy of this schedule.
-        The assignments dictionary is duplicated, but the Activity, Room,
-        and string values inside are shared by reference (safe since they
-        are never mutated after creation).
-        Fitness is reset to None since a mutated copy must be re-evaluated.
-        """
         new_schedule = Schedule()
         new_schedule.assignments = {
             activity: dict(assignment)

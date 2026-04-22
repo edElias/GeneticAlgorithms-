@@ -9,10 +9,7 @@ def run_experiments(
         min_generations=100,
         elite_size=10,
 ):
-    """
-    Runs the GA multiple times for each mutation rate and prints a summary table.
-    All runs are silent (verbose=False).
-    """
+    
     activities   = get_activities()
     rooms        = get_rooms()
     times        = get_times()
@@ -28,7 +25,7 @@ def run_experiments(
 
         for run in range(1, runs_per_rate + 1):
             print(f"  Run {run}/{runs_per_rate}...")
-            best, stop_gen, final_avg = run_genetic_algorithm(
+            best, stop_gen, final_avg, _history = run_genetic_algorithm(
                 activities,
                 rooms,
                 times,
@@ -37,6 +34,7 @@ def run_experiments(
                 min_generations=min_generations,
                 mutation_rate=rate,
                 elite_size=elite_size,
+                auto_halve_mutation=False,   # keep rate fixed so comparisons are clean
                 verbose=False,
             )
             best_fitnesses.append(best.fitness)

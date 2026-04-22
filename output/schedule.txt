@@ -1,0 +1,50 @@
+=== Final Schedule ===
+
+10AM:
+  SLA303 | Room: Slater 003 | Facilitator: Glen
+
+11AM:
+  SLA101B | Room: Loft 310 | Facilitator: Banks
+  SLA291  | Room: Loft 206 | Facilitator: Glen
+
+12PM:
+  SLA191A | Room: Loft 310 | Facilitator: Banks
+  SLA201  | Room: Roman 216 | Facilitator: Glen
+
+1PM:
+  SLA191B | Room: Loft 206 | Facilitator: Banks
+  SLA394  | Room: Beach 201 | Facilitator: Singer
+  SLA449  | Room: Roman 201 | Facilitator: Glen
+
+2PM:
+  SLA101A | Room: Loft 310 | Facilitator: Banks
+  SLA304  | Room: Slater 003 | Facilitator: Singer
+
+3PM:
+  SLA451 | Room: Frank 119 | Facilitator: Singer
+
+Fitness: 14.30
+
+=== Constraint Violations ===
+
+Room / Time conflicts:
+  Room conflicts (activities sharing room+time):      0
+  Facilitator double-booked at same time:             0
+
+Room size violations:
+  Room too small (capacity < enrollment):             0
+  Room slightly too big (1.5x < capacity <= 3x):      1
+  Room much too big (capacity > 3x enrollment):       0
+
+Facilitator load:
+  Overloaded facilitators (> 4 activities):           0
+  Underloaded facilitators (< 3 activities):          0
+    (Tyler exempted when assigned < 2 activities)
+
+Special rules:
+  SLA101 sections in same time slot:                  0
+  SLA191 sections in same time slot:                  0
+  SLA101/SLA191 cross-pairs in same slot (0..4):      0
+  Consecutive 101/191 pair split across buildings:    0
+
+Total violations: 1

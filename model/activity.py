@@ -1,10 +1,6 @@
 #Currently working on ED
 
 class Activity:
-    """
-    Represents a single activity to be scheduled.
-    Stores static data only — no room, time, or facilitator assignments.
-    """
 
     def __init__(self, name, expected_enrollment, preferred_facilitators, other_facilitators):
         self.name = name

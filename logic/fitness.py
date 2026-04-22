@@ -1,16 +1,7 @@
 from collections import defaultdict
 
 
-# =============================================================================
-# Private helpers
-# =============================================================================
-
 def _build_room_time_map(schedule):
-    """
-    Returns a dict mapping (room.name, time) -> list of activities.
-    Uses room.name as the key so lookups are string-based and safe
-    even if Room objects are ever recreated.
-    """
     room_time_map = defaultdict(list)
     for activity, assignment in schedule.assignments.items():
         key = (assignment["room"].name, assignment["time"])
@@ -19,12 +10,6 @@ def _build_room_time_map(schedule):
 
 
 def _build_facilitator_maps(schedule):
-    """
-    Returns two dicts:
-      - facilitator_total:     facilitator -> total number of activities
-      - facilitator_time_map:  (facilitator, time) -> list of activities
-    Used to evaluate facilitator load rules.
-    """
     facilitator_total    = defaultdict(int)
     facilitator_time_map = defaultdict(list)
 
@@ -42,21 +27,14 @@ _TIME_INDEX = {t: i for i, t in enumerate(TIME_SLOTS)}
 
 
 def _time_to_index(time_string):
-    """Converts a time string to its slot index (e.g. '10AM' -> 0)."""
     return _TIME_INDEX.get(time_string, -1)
 
 
 def _is_roman_or_beach(room):
-    """Returns True if the room is in the Roman or Beach building."""
     return room.name.startswith("Roman") or room.name.startswith("Beach")
 
 
 def _apply_consecutive_pair_penalty(assignment_a, assignment_b):
-    """
-    Applies the consecutive-slot building-distance penalty for a pair of
-    assignments that are already known to be in consecutive time slots.
-    Returns the score delta (float).
-    """
     score = 0.0
     in_rb_a = _is_roman_or_beach(assignment_a["room"])
     in_rb_b = _is_roman_or_beach(assignment_b["room"])
@@ -65,22 +43,8 @@ def _apply_consecutive_pair_penalty(assignment_a, assignment_b):
     return score
 
 
-# =============================================================================
-# Main fitness function
-# =============================================================================
 
 def calculate_fitness(schedule):
-    """
-    Evaluates a schedule and returns its total fitness score (float).
-    Scores each activity based on:
-      - room size
-      - facilitator preference
-      - room/time conflicts
-      - facilitator load
-      - SLA101/SLA191 section spacing and cross-pair timing
-      - facilitator consecutive-slot building penalty
-    Also assigns the result to schedule.fitness.
-    """
     total_fitness = 0.0
 
     room_time_map                            = _build_room_time_map(schedule)
@@ -99,7 +63,6 @@ def calculate_fitness(schedule):
         enrollment  = activity.expected_enrollment
         capacity    = room.capacity
 
-        # --- Part 1: Room Size ---
         if capacity < enrollment:
             total_fitness -= 0.5
         elif capacity > 3 * enrollment:
@@ -109,7 +72,6 @@ def calculate_fitness(schedule):
         else:
             total_fitness += 0.3
 
-        # --- Part 2: Facilitator Preference ---
         if facilitator in activity.preferred_facilitators:
             total_fitness += 0.5
         elif facilitator in activity.other_facilitators:
@@ -117,22 +79,21 @@ def calculate_fitness(schedule):
         else:
             total_fitness -= 0.1
 
-        # --- Part 3: Room/Time Conflicts ---
         key = (room.name, time)
         if len(room_time_map[key]) > 1:
             total_fitness -= 0.5
 
-        # --- Part 4: Facilitator Load (per time slot) ---
         activities_at_time = len(facilitator_time_map[(facilitator, time)])
         if activities_at_time == 1:
             total_fitness += 0.2
         elif activities_at_time > 1:
             total_fitness -= 0.2
 
-    # --- Part 4: Facilitator Load (total) ---
     for facilitator, total in facilitator_total.items():
         if facilitator == "Tyler":
-            if total < 2:
+            if total > 4:
+                total_fitness -= 0.5
+            elif total < 3 and total >= 2:   # 2 is penalized; 0 or 1 is exempt
                 total_fitness -= 0.4
         else:
             if total > 4:
@@ -140,7 +101,6 @@ def calculate_fitness(schedule):
             elif total < 3:
                 total_fitness -= 0.4
 
-    # --- Part 5: SLA101 / SLA191 section spacing and cross-pair timing ---
     sla101a = assignment_by_name.get("SLA101A")
     sla101b = assignment_by_name.get("SLA101B")
     sla191a = assignment_by_name.get("SLA191A")
@@ -162,7 +122,6 @@ def calculate_fitness(schedule):
         elif diff == 0:
             total_fitness -= 0.5
 
-    # Cross-pair timing: all 4 combinations of SLA101 x SLA191
     sla101_sections = [s for s in [sla101a, sla101b] if s]
     sla191_sections = [s for s in [sla191a, sla191b] if s]
 
@@ -178,7 +137,6 @@ def calculate_fitness(schedule):
             elif diff == 0:
                 total_fitness -= 0.25
 
-    # --- Part 6: Facilitator consecutive-slot building penalty ---
     # Group activities by facilitator
     facilitator_activities = defaultdict(list)
     for activity, assignment in schedule.assignments.items():
